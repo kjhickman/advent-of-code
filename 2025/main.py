@@ -30,7 +30,7 @@ def run_day(day: int) -> None:
         print(f"Day {day}: input.txt not found")
         return
 
-    data = input_file.read_text().rstrip()
+    data = input_file.read_text().rstrip().splitlines()
 
     try:
         module = importlib.import_module(f"{day_str}.solution")
