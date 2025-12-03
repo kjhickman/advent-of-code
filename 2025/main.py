@@ -4,11 +4,11 @@ import time
 from pathlib import Path
 
 def get_all_days() -> list[int]:
-    """Find all dayXX directories that have a solution.py."""
+    """Find all dayXX directories that have a dayXX.py."""
     root = Path(__file__).parent
     days = []
     for d in sorted(root.iterdir()):
-        if d.is_dir() and d.name.startswith("day") and (d / "solution.py").exists():
+        if d.is_dir() and d.name.startswith("day") and (d / f"{d.name}.py").exists():
             try:
                 days.append(int(d.name[3:]))
             except ValueError:
@@ -33,7 +33,7 @@ def run_day(day: int) -> None:
     data = input_file.read_text().rstrip().splitlines()
 
     try:
-        module = importlib.import_module(f"{day_str}.solution")
+        module = importlib.import_module(f"{day_str}.{day_str}")
     except ImportError as e:
         print(f"Day {day}: Failed to import solution - {e}")
         return

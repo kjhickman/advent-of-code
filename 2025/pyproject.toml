@@ -7,9 +7,7 @@ requires-python = ">=3.9"
 dependencies = []
 
 [dependency-groups]
-dev = [
-    "pytest>=8.4.2",
-]
+dev = []
 
 [tool.pytest.ini_options]
-python_files = ["solution.py"]
+python_files = ["day*.py"]

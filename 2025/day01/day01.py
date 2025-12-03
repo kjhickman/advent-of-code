@@ -51,7 +51,7 @@ SAMPLE = [
     "L82",
 ]
 
-SAMPLE2 = [
+EDGECASE = [
     "L49",
     "L101",
 ]
@@ -63,5 +63,4 @@ def test_part2():
     assert part2(SAMPLE) == 6
 
 def test_part2_edgecase():
-    assert part2(SAMPLE2) == 2
-
+    assert part2(EDGECASE) == 2
