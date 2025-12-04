@@ -1,16 +1,18 @@
-import importlib
+import importlib.util
 import sys
 import time
 from pathlib import Path
 
+
 def get_all_days() -> list[int]:
-    """Find all dayXX directories that have a dayXX.py."""
-    root = Path(__file__).parent
+    """Find all solution files in the solutions directory."""
+    solutions_dir = Path(__file__).parent / "solutions"
     days = []
-    for d in sorted(root.iterdir()):
-        if d.is_dir() and d.name.startswith("day") and (d / f"{d.name}.py").exists():
+    if solutions_dir.exists():
+        for file in sorted(solutions_dir.glob("day*.py")):
             try:
-                days.append(int(d.name[3:]))
+                day = int(file.stem[3:])  # Remove "day" prefix
+                days.append(day)
             except ValueError:
                 continue
     return days
@@ -19,13 +21,15 @@ def get_all_days() -> list[int]:
 def run_day(day: int) -> None:
     """Run a single day's solution."""
     day_str = f"day{day:02d}"
-    day_dir = Path(__file__).parent / day_str
+    solutions_dir = Path(__file__).parent / "solutions"
+    inputs_dir = Path(__file__).parent / "inputs"
 
-    if not day_dir.exists():
+    solution_file = solutions_dir / f"{day_str}.py"
+    if not solution_file.exists():
         print(f"Day {day} not found")
         return
 
-    input_file = day_dir / "input.txt"
+    input_file = inputs_dir / f"{day_str}.txt"
     if not input_file.exists():
         print(f"Day {day}: input.txt not found")
         return
@@ -33,8 +37,10 @@ def run_day(day: int) -> None:
     data = input_file.read_text().rstrip().splitlines()
 
     try:
-        module = importlib.import_module(f"{day_str}.{day_str}")
-    except ImportError as e:
+        spec = importlib.util.spec_from_file_location(f"{day_str}", solution_file)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+    except Exception as e:
         print(f"Day {day}: Failed to import solution - {e}")
         return
 
